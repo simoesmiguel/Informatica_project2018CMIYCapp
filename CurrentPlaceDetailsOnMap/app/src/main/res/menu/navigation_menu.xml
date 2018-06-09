@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/add_friend"
+        android:icon="@mipmap/ic_tag_faces_black_24dp"
+        android:title="Add Friend">
+
+    </item>
+    <item android:id="@+id/meeting_point"
+        android:icon="@mipmap/ic_location_on_black_24dp"
+        android:title="Setup Meeting Point">
+
+    </item>
+    <item android:id="@+id/notifications"
+        android:icon="@mipmap/ic_priority_high_black_24dp"
+        android:title="Notifications">
+
+    </item>
+    <item android:id="@+id/settings"
+        android:icon="@mipmap/ic_settings_black_24dp"
+        android:title="Settings">
+
+    </item>
+    <item android:id="@+id/help_about"
+        android:icon="@mipmap/ic_help_black_24dp"
+        android:title="Help / About">
+
+    </item>
+</menu>

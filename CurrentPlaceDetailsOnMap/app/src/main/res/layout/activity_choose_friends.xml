@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chooseFriends">
+
+    <Button
+        android:id="@+id/sendTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/colorbutton"
+        android:text="Send To"
+        android:textColor="@android:color/white"
+        android:onClick="sendMessage"
+        />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:text=" Choose Friends "
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <LinearLayout
+        android:id="@+id/checkboxLayout"
+        android:layout_width="match_parent"
+        android:layout_height="298dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="132dp"
+        android:orientation="vertical"
+        android:textColor="@drawable/white_color"
+        >
+
+    </LinearLayout>
+
+</RelativeLayout>
