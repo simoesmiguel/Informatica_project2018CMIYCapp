@@ -9,57 +9,56 @@
 
     <TextView
         android:id="@+id/textView11"
-        android:layout_width="0dp"
-        android:layout_height="71dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="38dp"
-        android:layout_marginLeft="38dp"
-        android:layout_marginRight="38dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="76dp"
-        android:text="Currently, you are sharing your location with : "
-        android:textSize="17sp"
-        app:layout_constraintBottom_toTopOf="@+id/currentSharingContacts"
+        android:layout_width="362dp"
+        android:layout_height="112dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="43dp"
+        android:text="Share your Location periodically with your friends !"
+        android:textAllCaps="false"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="19dp"
-        android:layout_marginEnd="37dp"
-        android:layout_marginLeft="37dp"
-        android:layout_marginRight="37dp"
-        android:layout_marginStart="37dp"
-        android:text="Share your location with more friends "
-        android:textSize="17sp"
-        app:layout_constraintBottom_toTopOf="@+id/_dynamic"
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="25dp"
+        android:layout_height="29dp"
+        android:layout_marginBottom="87dp"
+        android:layout_marginEnd="148dp"
+        android:src="@drawable/time_icon"
+        app:layout_constraintBottom_toTopOf="@+id/currentSharingContacts"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="45dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="16dp"
+        android:src="@mipmap/ic_location_on_black_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentSharingContacts" />
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <ListView
         android:id="@+id/currentSharingContacts"
         android:layout_width="234dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="21dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView13"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11">
-
-    </ListView>
-
-    <ListView
-        android:layout_width="228dp"
-        android:layout_height="95dp"
-        android:layout_marginBottom="81dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+    </ListView>
+
 
 </android.support.constraint.ConstraintLayout>

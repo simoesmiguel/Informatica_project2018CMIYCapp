@@ -129,7 +129,14 @@
                 android:src="@drawable/help_icon"
                 />
 
-
+            <com.github.clans.fab.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/createGeofence"
+                app:fab_label="Help/About"
+                app:fab_size="mini"
+                android:src="@drawable/help_icon"
+                />
 
 
 

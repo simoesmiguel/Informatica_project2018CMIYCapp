@@ -28,6 +28,7 @@ import com.example.someoneelse.library.LocationMethodsAndroid;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -62,11 +63,11 @@ public class ShareCurrentLocation extends AppCompatActivity {
         list_view2 = (ListView) findViewById(R.id.listView_choose_meetingPoint);
         likely_places = new ArrayList<>();
         likely_places_withGranularity = new HashSet<>();
-
+        context= this;
         checkExtras(intent);
 
         error_message="you got to choose one likely place";
-        context= this;
+
 
 
 
@@ -119,6 +120,12 @@ public class ShareCurrentLocation extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+           // String[] a = {"R. Vala 54", "R. Vala 54, 3515-247 Viseu, Portugal", "Quinta Fontinha da Pedra, R. São José 5, 3515-247 Viseu, Portugal"," Transportes António Valente Lopes, Lda"," Rua Campo Da Bola, Moure De Madalena, Viseu", "3515-334 Viseu, Portugal"};
+            String [] b ={"Departamento de Biologia da Universidade de Aveiro","Aveiro, Portugal, Universidade de Aveiro","DETI - Departamento de Electrónica","Telecomunicações e Informática"," 3810-193 Aveiro, Portugal","Departamento de Ambiente e Ordenamento, Aveiro",""};
+
+            likely_places = new ArrayList<String>(Arrays.asList(b));
+
+
 
         }else{
             // another type of extra
@@ -146,7 +153,8 @@ public class ShareCurrentLocation extends AppCompatActivity {
     public static void setMeetingPoints(Map<String, String[]> dist_time){
 
         for(String s:dist_time.keySet()){  // convert from Set to ArrayList
-            String a = s+" : [Time]"+dist_time.get(s)[0]+"  [Distance]"+dist_time.get(s)[1];
+            System.out.println("MAPA:" + s+" : [Time]"+dist_time.get(s)[0]+"  [Distance]"+dist_time.get(s)[1]);
+            String a ="     "+ s+"\n [Time]"+dist_time.get(s)[0]+"  [Distance]"+dist_time.get(s)[1];
             finalSet.add(a);
         }
 
@@ -154,6 +162,8 @@ public class ShareCurrentLocation extends AppCompatActivity {
         for(String s:finalSet){  // convert from Set to ArrayList
             finalArray.add(s);
         }
+
+        System.out.println("FINAL ARRAY :" +finalArray);
 
         adapter = new ArrayAdapter<String>(context,R.layout.list_item, finalArray);
         list_view2.setAdapter(adapter);

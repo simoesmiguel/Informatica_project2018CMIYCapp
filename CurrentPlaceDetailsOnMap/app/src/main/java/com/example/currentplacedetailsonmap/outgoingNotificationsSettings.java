@@ -2,6 +2,7 @@ package com.example.currentplacedetailsonmap;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.job.JobInfo;
@@ -21,12 +22,15 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -40,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class outgoingNotificationsSettings extends AppCompatActivity {
+public class outgoingNotificationsSettings extends Activity {
 
     private PendingIntent pendingIntent;
     private AlarmManager manager;
@@ -90,8 +94,26 @@ public class outgoingNotificationsSettings extends AppCompatActivity {
 
         currentSharingContacts = (ListView) findViewById(R.id.currentSharingContacts);
         setList();
+
     }
 
+    public void showNotification(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                    builder.setTitle("Share your location");
+                    builder.setMessage("If you want your friends to receive notifications when you're close to them, just click on their name and choose a time interval to share your current location with them! ");
+
+        // Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+             });
+
+            builder.show();
+
+    }
     public void startAlarm(String timeToRepeat,String destination_id) {
         MyService ms = new MyService();
         Intent i = new Intent(this, MyService.class);
@@ -161,8 +183,7 @@ public class outgoingNotificationsSettings extends AppCompatActivity {
                 //startAlarm(sp.getSelectedItem().toString(),destination_id);
                 //NewAlarmReceiver nar = new NewAlarmReceiver(this,1000*600,);
                 setNewAlarm(sp.getSelectedItem().toString(),destination_id);
-
-
+                SendIntentProperly();
             }
         });
 
@@ -199,8 +220,6 @@ public class outgoingNotificationsSettings extends AppCompatActivity {
         jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
 
         jobScheduler.schedule(jobInfo); // schedules the job
-        Toast.makeText(this, "Job scheduled", Toast.LENGTH_LONG).show(); // For example
-
 
         /*
 
