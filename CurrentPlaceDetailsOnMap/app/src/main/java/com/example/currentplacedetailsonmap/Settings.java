@@ -7,13 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
 
     private Switch incomingNotificationsSwitch, outgoingNotificationsSwitch;
-    private Button customizeIncomingButton,customizeOutgoingButton,newZoneButton,editZoneButton;
+    private ImageButton customizeIncomingButton,customizeOutgoingButton,newZoneButton,editZoneButton;
     private String gpscoords;
 
     @Override
@@ -27,10 +28,10 @@ public class Settings extends AppCompatActivity {
         //get all the switches and buttons
         incomingNotificationsSwitch = (Switch) findViewById(R.id.enableIncomingSwitch);
         outgoingNotificationsSwitch = (Switch) findViewById(R.id.enableOutgoingSwitch);
-        customizeIncomingButton = (Button) findViewById(R.id.customizeIncomingButton);
-        customizeOutgoingButton = (Button) findViewById(R.id.customizeOutgoingButton);
-        newZoneButton = (Button) findViewById(R.id.newZoneButton);
-        editZoneButton = (Button) findViewById(R.id.editZoneButton);
+        customizeIncomingButton = (ImageButton) findViewById(R.id.customizeIncomingButton);
+        customizeOutgoingButton = (ImageButton) findViewById(R.id.customizeOutgoingButton);
+        newZoneButton = (ImageButton) findViewById(R.id.newZoneButton);
+        editZoneButton = (ImageButton) findViewById(R.id.editZoneButton);
 
         SharedPreferences sharedPrefs = getSharedPreferences("com.example.Settings", MODE_PRIVATE);
         incomingNotificationsSwitch.setChecked(sharedPrefs.getBoolean("incomingNotificationsSwitch", true));

@@ -141,7 +141,31 @@ public class DecodeAddressReceiver extends BroadcastReceiver {
             try {
                 System.out.println("<DecodeAddressReceiver> GETTING ALL MEETING POINTS");
                 Map<String, double[]> map =lm.getAllMeetingCoords();
-                startSpecificAppProperly(context,"AllMeetingCoords", new HashMap<String, double[]>(map));
+                Map<String, double[]> map2 =lm.getAllZones();
+                System.out.println("<Decode ADDRESS RECEIVER> PRINTING ALL GEOFENCES "+map2);
+
+               // startSpecificAppProperly(context,"AllMeetingCoords", new HashMap<String, double[]>(map));
+
+                Intent intentMeetingPointAndZones = new Intent(Intent.ACTION_SEND);
+                intentMeetingPointAndZones.setType("text/plain");
+
+                PackageManager packageManager = context.getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(intentMeetingPointAndZones, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                System.out.println("isIntentSafe : "+isIntentSafe );
+                System.out.println("lista de atividades "+activities.toString());
+                // Start an activity if it's safe
+                if (isIntentSafe) {
+                    for (ResolveInfo activity : activities){
+                        if(activity.activityInfo.packageName.contains("owntracks")){
+                            intentMeetingPointAndZones.setPackage(activity.activityInfo.packageName);
+                            intentMeetingPointAndZones.putExtra("AllMeetingCoords",new HashMap<String, double[]>(map));
+                            intentMeetingPointAndZones.putExtra("AllZones",new HashMap<String, double[]>(map2));
+                            context.startActivity(intentMeetingPointAndZones);
+                        }
+                    }
+                }
+
 
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -200,28 +224,9 @@ public class DecodeAddressReceiver extends BroadcastReceiver {
         }
     }
 
-    public void startSpecificAppProperly(Context context,String extra,HashMap<String,double[]> extraValue){  //st
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-
-        PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
-        boolean isIntentSafe = activities.size() > 0;
-        System.out.println("isIntentSafe : "+isIntentSafe );
-        System.out.println("lista de atividades "+activities.toString());
-        // Start an activity if it's safe
-        if (isIntentSafe) {
-            for (ResolveInfo activity : activities){
-                if(activity.activityInfo.packageName.contains("owntracks")){
-                    intent.setPackage(activity.activityInfo.packageName);
-                    intent.putExtra(extra,extraValue);
-                    context.startActivity(intent);
-                }
-            }
-        }
 
 
-    }
+
 
     public String getContactName( String phoneNumber, Context context)
     {

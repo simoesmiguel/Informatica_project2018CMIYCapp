@@ -40,6 +40,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -113,7 +114,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
 
 
     private FloatingActionMenu floatingActionMenu;
-    private FloatingActionButton addFriend,meetingPoint,notifications,settings,help;
+    private FloatingActionButton addFriend,meetingPoint,notifications,settings,help,geoFence;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -184,6 +185,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
             gpsCoords = extras.getString("GPScoords");
             //Toast.makeText(this,decodedMessage,Toast.LENGTH_LONG).show();
             try {
+
                 redirectToshareCurrentlocationPage(gpsCoords);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -198,7 +200,10 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
             encodeCoordsAndSendBack(gpsCoords);
         }else if(intent.hasExtra("saveMeetingPoint")){
             String meetingPointTag = getIntent().getExtras().getString("saveMeetingPoint");
-            redirectToChooseFriendsPage(meetingPointTag);
+            redirectToChooseFriendsPage(meetingPointTag,"meetingPoint");
+        }else if(intent.hasExtra("saveGeofence")){
+            String geofenceTag = getIntent().getExtras().getString("saveGeofence");
+            redirectToChooseFriendsPage(geofenceTag,"geofence");
         }
 
 
@@ -235,6 +240,8 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         notifications = (FloatingActionButton) findViewById(R.id.notificationsFAB);
         settings = (FloatingActionButton) findViewById(R.id.settingsFAB);
         help = (FloatingActionButton) findViewById(R.id.helpFAB);
+        geoFence = (FloatingActionButton) findViewById(R.id.createGeofence);
+
 
 
         addFriend.setOnClickListener(new View.OnClickListener() {
@@ -269,6 +276,14 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         });
 
 
+        geoFence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generateGeofence(view);
+            }
+        });
+
+
     }
     public void getDistanceAndTimeToAllMeetingPoints(String gpsCoords) throws ClassNotFoundException {
 
@@ -288,6 +303,8 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
             sb.append("origin=" + Double.parseDouble(gpsCoords.split(",")[0]) + "," + Double.parseDouble(gpsCoords.split(",")[1]));
             sb.append("&destination=" + map.get(s)[0] + "," + map.get(s)[1]);
             sb.append("&key=" + "AIzaSyBflfO3Bo5efUGcoLHSqh2B3AaPLjnCGVI");
+
+            System.out.println("STRING BUILDER: "+sb);
 
             getDirectionsData = new GetDirectionsData(getApplicationContext());
             dataTransfer[0] = mMap;
@@ -364,9 +381,12 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         Toast.makeText(this,"ainda nao esta implementado", Toast.LENGTH_SHORT);
     }
 
-    public void redirectToChooseFriendsPage(String meetingPointTag){
+    public void redirectToChooseFriendsPage(String Tag,String what){
         Intent settings = new Intent(this, chooseFriends.class);
-        settings.putExtra("meetingPointTag",meetingPointTag);
+        if(what.equals("meetingPoint"))
+            settings.putExtra("meetingPointTag",Tag);
+        else if(what.equals("geofence"))
+            settings.putExtra("geofenceTag",Tag);
         startActivity(settings);
     }
 
@@ -401,9 +421,11 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
     }
 
 
-    public void shareCurrent(View view){
+    public void shareCurrent(View view) throws ClassNotFoundException {
+        getDistanceAndTimeToAllMeetingPoints(lat+","+lon);
         Intent share_current_locat = new Intent(this, ShareCurrentLocation.class );
         share_current_locat.putExtra("array",likely_places);
+        System.out.println("FDP" +likely_places);
         startActivity(share_current_locat);
     }
 
@@ -411,6 +433,12 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         Intent readQr = new Intent(this, QReader.class );
         startActivity(readQr);
     }
+
+    public void generateGeofence(View view){
+        Intent geoFences = new Intent(this, GeoFences.class );
+        startActivity(geoFences);
+    }
+
 
     public void goToSettingsPage(){
         Intent settingsPage = new Intent(this, Settings.class );
@@ -488,7 +516,31 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         // added by me (MMS)
         addOptionsToScrollView();
 
+        //drawCircle(new LatLng(40.703963, -7.905613));
+    }
 
+    private void drawCircle(LatLng point){
+
+        // Instantiating CircleOptions to draw a circle around the marker
+        CircleOptions circleOptions = new CircleOptions();
+
+        // Specifying the center of the circle
+        circleOptions.center(point);
+
+        // Radius of the circle
+        circleOptions.radius(150);
+
+        // Border color of the circle
+        circleOptions.strokeColor(Color.BLUE);
+
+        // Fill color of the circle
+        circleOptions.fillColor(0x30ff0000);
+
+        // Border width of the circle
+        circleOptions.strokeWidth(2);
+
+        // Adding the circle to the GoogleMap
+        mMap.addCircle(circleOptions);
     }
 
     public void generateGeohashSquare()
@@ -543,6 +595,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         // Calculate the bounds of the final positions
         LatLngBounds finalBounds = builder.build();
         drawBounds (finalBounds, Color.BLUE);
+
 
     }
 
@@ -700,6 +753,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
                                 int count;
                                 if (likelyPlaces.getCount() < M_MAX_ENTRIES) {
                                     count = likelyPlaces.getCount();
+                                    System.out.println("AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII "+count);
                                 } else {
                                     count = M_MAX_ENTRIES;
                                 }
@@ -756,6 +810,8 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
             // Prompt the user for permission.
             getLocationPermission();
         }
+
+        System.out.println("LIKELI PLACES CRLHHHH "+likely_places);
     }
 
 

@@ -73,6 +73,7 @@ public class chooseFriends extends AppCompatActivity {
     private String phoneNumber;
     private boolean fromAnotherApp= false;
     private String meetingTag;
+    private String geofenceTag;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -105,12 +106,12 @@ public class chooseFriends extends AppCompatActivity {
                 String name=showContacts();
                 if(name.equals(""))
                     name=showContacts();
-                if(!phoneNumber.equals(lm.getMyPhoneNumber())) {
+            //    if(!phoneNumber.equals(lm.getMyPhoneNumber())) {
                     Log.d("name_id ", name + "_" + id);
                     contacts_array.add(name);
                     name_number.put(name, id);
                     name_id.put(name, id);
-                }
+            //    }
             }
 
         } catch (Exception e) {
@@ -131,8 +132,9 @@ public class chooseFriends extends AppCompatActivity {
             // another type of extra
             fromAnotherApp = true;
             meetingTag = intent.getExtras().getString("meetingPointTag");
-        }else{
-            //another type of intent
+        }else if(intent.hasExtra("geofenceTag")){
+            fromAnotherApp = true;
+            geofenceTag = intent.getExtras().getString("geofenceTag");
         }
 
     }
@@ -197,8 +199,33 @@ public class chooseFriends extends AppCompatActivity {
             if(meetingTag!=null){
                 //save meetingPoint to database
                 lm.saveMeetingCoords(meetingTag.split(",")[0],new double[]{Double.parseDouble(meetingTag.split(",")[1]),Double.parseDouble(meetingTag.split(",")[2])});
-            }
-            getBacktoTheOtherApp();
+                getBacktoTheOtherApp();
+            }else if(geofenceTag!=null){
+                lm.saveZone(geofenceTag.split(",")[0], new double[]{Double.parseDouble(geofenceTag.split(",")[1]),Double.parseDouble(geofenceTag.split(",")[2])},Double.parseDouble(geofenceTag.split(",")[3]));
+                //create Geofence
+
+
+
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(sendIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                System.out.println("isIntentSafe : "+isIntentSafe );
+                System.out.println("lista de atividades "+activities.toString());
+                // Start an activity if it's safe
+                if (isIntentSafe) {
+                    for (ResolveInfo activity : activities){
+                        if(activity.activityInfo.packageName.contains("owntracks")){
+                            sendIntent.setPackage(activity.activityInfo.packageName);
+                            sendIntent.putExtra("<CMIYC>goBackAfterSaveGeofence","goBackAfterSaveGeofence");
+                            startActivity(sendIntent);
+                        }
+                    }
+                }
+
+            }else
+                getBacktoTheOtherApp();
         }else{
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)!= PackageManager.PERMISSION_GRANTED){
                 if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.SEND_SMS)){
@@ -211,6 +238,9 @@ public class chooseFriends extends AppCompatActivity {
             }
         }
     }
+
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
